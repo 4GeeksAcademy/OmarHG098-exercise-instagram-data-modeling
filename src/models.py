@@ -24,6 +24,8 @@ Base = declarative_base()
 #     post_code = Column(String(250), nullable=False)
 #     person_id = Column(Integer, ForeignKey('person.id'))
 #     person = relationship(Person)
+
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key = True)
@@ -32,16 +34,26 @@ class User(Base):
     lastname = Column(String(100), nullable = False)
     email = Column(String(100), unique = True)
 
-# class Follower(Base):
-#     __tablename__ = 'follower'
-#     user_from_id = Column(Integer, ForeignKey("user.id"))
-#     user_to_id = Column(Integer, ForeignKey("user.id"))
+     #Relationships
+    followers = relationship("Follower", backref= "user_followers")
+    posts = relationship("Post", backref="user_posts")
+    comment = relationship("Comment", backref="user_comments")
+
+class Follower(Base):
+    __tablename__ = 'follower'
+    id = Column(Integer, primary_key = True)
+    user_from_id = Column(Integer, ForeignKey("user.id"))
+    user_to_id = Column(Integer, ForeignKey("user.id"))
 
 
 class Post(Base):
     __tablename__ = 'post'
     id = Column(Integer, primary_key = True, nullable = False)
     user_id = Column(Integer, ForeignKey("user.id"))
+
+    #Relationships
+    media = relationship("Media", backref= "post_media")
+    comments = relationship("Comment", backref = "post_comments")
 
 class Comment(Base):
     __tablename__ = 'comment'
@@ -53,7 +65,7 @@ class Comment(Base):
 class Media(Base):
     __tablename__ = 'media'
     id = Column(Integer, primary_key = True, nullable = False)
-    type = Column(Enum(100), nullable = False)
+    type = Column(String(255), nullable = False)
     url = Column(String(255), nullable = False)
     post_id = Column(Integer, ForeignKey("post.id")) 
 
