@@ -1,9 +1,10 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String, Enum
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum as SQLEnum
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
+from enum import Enum
 
 Base = declarative_base()
 
@@ -25,6 +26,9 @@ Base = declarative_base()
 #     person_id = Column(Integer, ForeignKey('person.id'))
 #     person = relationship(Person)
 
+class MediaType(Enum):
+    IMAGE: "image"
+    VIDEO: "video"
 
 class User(Base):
     __tablename__ = 'user'
@@ -65,7 +69,7 @@ class Comment(Base):
 class Media(Base):
     __tablename__ = 'media'
     id = Column(Integer, primary_key = True, nullable = False)
-    type = Column(String(255), nullable = False)
+    type = Column(SQLEnum(MediaType))
     url = Column(String(255), nullable = False)
     post_id = Column(Integer, ForeignKey("post.id")) 
 
